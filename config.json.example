@@ -1,0 +1,39 @@
+{
+  "configurations": [
+    {
+      "name": "官方 ChatGPT (gpt-4o)",
+      "type": "ChatGPT",
+      "api_key": "请在此处填入您的OpenAI API密钥 (sk-...)",
+      "api_base": "https://api.openai.com/v1/chat/completions",
+      "model": "gpt-4o"
+    },
+    {
+      "name": "官方 DeepSeek (deepseek-chat)",
+      "type": "DeepSeek",
+      "api_key": "请在此处填入您的DeepSeek API密钥 (sk-...)",
+      "api_base": "https://api.deepseek.com/v1/chat/completions",
+      "model": "deepseek-chat"
+    },
+    {
+      "name": "官方 Gemini (gemini-1.5-flash)",
+      "type": "Gemini",
+      "api_key": "请在此处填入您的Google Gemini API密钥",
+      "api_base": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
+      "model": "gemini-1.5-flash-latest"
+    },
+    {
+      "name": "我的第三方代理",
+      "type": "ChatGPT",
+      "api_key": "sk-your-provider-key",
+      "api_base": "https://your-proxy-provider.com/v1/chat/completions",
+      "model": "gpt-4-turbo"
+    },
+    {
+      "name": "本地模型服务 (Llama3)",
+      "type": "ChatGPT",
+      "api_key": "no-key-needed-for-local",
+      "api_base": "http://127.0.0.1:8080/v1/chat/completions",
+      "model": "llama3"
+    }
+  ]
+}
