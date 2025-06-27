@@ -1,6 +1,8 @@
 # ComfyUI AI Prompt Tools
 
 一个为 ComfyUI 设计的、由大型语言模型驱动的智能小工具，旨在将繁琐的提示词工程和翻译工作自动化，让您的创作流程更顺畅、更高效。
+![image](https://github.com/user-attachments/assets/4a291a4b-b8a6-42b3-ba68-37f7c1b486b4)
+
 
 ## ✨ 功能特性 (Features)
 
