@@ -1,4 +1,4 @@
-# ComfyUI AI Prompt Tools
+# comfyui-AIprompt-refiner
 
 因为太懒，懒得仔细写提示词而做的一个小插件，简单易用。本插件代码基本由AI完成，其实本人并不怎么会编程😊
 
