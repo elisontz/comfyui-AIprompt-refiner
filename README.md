@@ -28,7 +28,7 @@
 3. 克隆本仓库：
     
     ```
-    https://github.com/elisontz/comfyui-AIprompt-refiner.git
+    git clone https://github.com/elisontz/comfyui-AIprompt-refiner.git
     ```
     
 4. 重启 ComfyUI。
