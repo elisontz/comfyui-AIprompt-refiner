@@ -38,7 +38,6 @@ class AIPromptRefiner:
             "油画", "水彩画", "素描", "像素艺术", "低多边形", "简约", "复古"
         ]
         
-        # --- 最终优化: 移除“自动判断”选项 ---
         target_model_options = [
             "通用", 
             "SDXL",
@@ -95,26 +94,36 @@ class AIPromptRefiner:
 
     def _build_text_system_prompt(self, style: str, detail_level: str, strict_mode: bool, target_model: str) -> str:
         strict_instruction = " Your entire response must strictly follow the format: [EN] english prompt [ZH] chinese optimization notes." if strict_mode else ""
+        
         style_map = self._get_style_map()
+        detail_map = {"基础": "Basic", "详细": "Detailed", "极其详细": "Ultra Detailed"}
+        
         style_en = style_map.get(style, 'General')
-        detail_en = detail_level
+        detail_en = detail_map.get(detail_level, 'Basic')
 
-        # --- 最终优化: 根据目标模型选择不同的指令集 ---
+        # --- 核心修正: 明确告知AI工作环境并禁止外部参数 ---
+        ecosystem_context = (
+            "You are an expert prompt engineer for the **ComfyUI / Stable Diffusion ecosystem**. "
+            "Your output will be used directly in these systems. "
+            "**Crucially, do NOT include any platform-specific parameters like `--ar`, `--v`, `--style`, etc.** "
+            "Focus only on the descriptive text part of the prompt."
+        )
+
         if target_model == "Flux":
             prompt_style_instructions = (
-                "You are generating a prompt for the **Flux model** to be used in ComfyUI. "
+                "You are generating a prompt for the **Flux model**. "
                 "This model excels at understanding natural, descriptive language. "
                 "Your task is to enhance the user's idea into a rich, descriptive prompt that works best for Flux."
             )
         elif target_model == "SDXL":
             prompt_style_instructions = (
-                "You are generating a prompt for the **SDXL model** to be used in ComfyUI. "
+                "You are generating a prompt for the **SDXL model**. "
                 "This model understands detailed descriptions and keyword-based prompts well. "
                 "Your task is to enhance the user's idea into a powerful and effective prompt that works best for SDXL."
             )
-        else: # 默认 "通用"
+        else:
              prompt_style_instructions = (
-                "You are generating a prompt for **Stable Diffusion models (v1.5, etc.)** to be used in ComfyUI. "
+                "You are generating a prompt for **general Stable Diffusion models (v1.5, etc.)**. "
                 "These models respond best to structured, keyword-rich prompts with clear tags. "
                 "Your task is to enhance the user's idea into a powerful and effective prompt in this style."
             )
@@ -127,8 +136,9 @@ class AIPromptRefiner:
              style_instruction = "Your goal is to create a universally effective and detailed prompt."
 
         return (
-            "You are a world-class expert in writing prompts for AI image generation for various models.\n"
-            f"Your primary task is to take a user's basic idea and transform it into a highly effective prompt based on the user's chosen target model style.{strict_instruction}\n\n"
+            f"{ecosystem_context}\n\n"
+            "Your primary task is to take a user's basic idea and transform it into a highly effective prompt based on the user's chosen target model style."
+            f"{strict_instruction}\n\n"
             "## Core Instructions\n"
             f"{prompt_style_instructions}\n\n"
             "## Task\n"
@@ -160,13 +170,22 @@ class AIPromptRefiner:
                 print("🖼️ 检测到图片，切换到视觉分析模式。")
                 base64_image = self._tensor_to_base64(image)
                 
+                style_map = self._get_style_map()
+                detail_map = {"基础": "Basic", "详细": "Detailed", "极其详细": "Ultra Detailed"}
+                style_en = style_map.get(style, 'General')
+                detail_en = detail_map.get(detail_level, 'Basic')
+
                 system_prompt_text = (
-                    "You are an expert in analyzing images and creating descriptive prompts for AI image generation. "
+                    "You are an expert in analyzing images and creating descriptive prompts for AI image generation within the **ComfyUI / Stable Diffusion ecosystem**. "
                     "First, describe the provided image in detail. Then, use that description to generate a new, optimized prompt. "
-                    f"The prompt should be suitable for a '{target_model}' model. Follow its best practices."
+                    f"The prompt should be suitable for a '{target_model}' model. Follow its best practices. "
+                    "**Crucially, do NOT include any platform-specific parameters like `--ar`, `--v`, `--style`, etc.**"
                 )
-                user_prompt_text = f"Analyze the image, then create a new prompt. The desired art style is '{style}' and detail level is '{detail_level}'. User's additional instruction: '{prompt}'"
+                user_prompt_text = f"Analyze the image, then create a new prompt. The desired art style is '{style_en}' and detail level is '{detail_en}'. User's additional instruction: '{prompt}'"
                 
+                strict_instruction = " Your entire response must strictly follow the format: [EN] english prompt [ZH] chinese optimization notes." if strict_mode else ""
+                user_prompt_text += f"\n\n{strict_instruction}"
+
                 if service_type == "Gemini":
                     if "key=" not in api_url: api_url = f"{api_url}?key={final_key}"
                     final_user_text = f"{system_prompt_text}\n\n{user_prompt_text}"
@@ -205,9 +224,9 @@ class AIPromptRefiner:
             content = data['candidates'][0]['content']['parts'][0]['text'] if service_type == "Gemini" else data['choices'][0]['message']['content']
             
             en_part_match = re.search(r"\[EN\](.*?)\[ZH\]", content, re.DOTALL)
-            zh_part_match = re.search(r"\[ZH\](.*)", content, re.DOTALL)
             optimized_prompt = clean_text(en_part_match.group(1)) if en_part_match else "⚠️ 解析优化后的提示词失败。检查AI是否返回了[EN]...[ZH]...格式。"
-            optimization_notes = zh_part_match.group(1).strip() if zh_part_match else "⚠️ 解析优化笔记失败。"
+            
+            optimization_notes = content
             
             negative_prompt_text = clean_text(custom_negative) if negative_mode == "自定义" else self.NEGATIVE_PROMPTS.get(negative_mode, "")
             

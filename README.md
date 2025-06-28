@@ -1,6 +1,11 @@
-# ComfyUI AI Prompt Tools
+# comfyui-AIprompt-refiner
+
+因为太懒，懒得仔细写提示词而做的一个小插件，简单易用。本插件代码基本由AI完成，其实本人并不怎么会编程😊
 
 一个为 ComfyUI 设计的、由大型语言模型驱动的智能小工具，旨在将繁琐的提示词工程和翻译工作自动化，让您的创作流程更顺畅、更高效。
+![image](https://github.com/user-attachments/assets/4a291a4b-b8a6-42b3-ba68-37f7c1b486b4)
+
+
 
 ## ✨ 功能特性 (Features)
 
@@ -28,7 +33,7 @@
 3. 克隆本仓库：
     
     ```
-    git clone [https://github.com/your-username/comfyui-AIprompt-refiner.git](https://github.com/your-username/comfyui-AIprompt-refiner.git)
+    git clone https://github.com/elisontz/comfyui-AIprompt-refiner.git
     ```
     
 4. 重启 ComfyUI。
@@ -56,35 +61,35 @@
       "name": "官方 ChatGPT (gpt-4o)",
       "type": "ChatGPT",
       "api_key": "请在此处填入您的OpenAI API密钥 (sk-...)",
-      "api_base": "[https://api.openai.com/v1/chat/completions](https://api.openai.com/v1/chat/completions)",
-      "model": "gpt-4o"
+      "api_base": "https://api.openai.com/v1/chat/completions",
+      "model": "gpt-4o-mini"
     },
     {
       "name": "官方 DeepSeek (deepseek-chat)",
       "type": "DeepSeek",
       "api_key": "请在此处填入您的DeepSeek API密钥 (sk-...)",
-      "api_base": "[https://api.deepseek.com/v1/chat/completions](https://api.deepseek.com/v1/chat/completions)",
+      "api_base": "https://api.deepseek.com/v1/chat/completions",
       "model": "deepseek-chat"
     },
     {
       "name": "官方 Gemini (gemini-1.5-flash)",
       "type": "Gemini",
       "api_key": "请在此处填入您的Google Gemini API密钥",
-      "api_base": "[https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent](https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent)",
-      "model": "gemini-1.5-flash-latest"
+      "api_base": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+      "model": "gemini-2.5-flash"
     },
     {
       "name": "我的第三方代理",
       "type": "ChatGPT",
       "api_key": "sk-your-provider-key",
-      "api_base": "[https://your-proxy-provider.com/v1/chat/completions](https://your-proxy-provider.com/v1/chat/completions)",
+      "api_base": "https://your-proxy-provider.com/v1/chat/completions",
       "model": "gpt-4-turbo"
     },
     {
       "name": "本地模型服务 (Llama3)",
       "type": "ChatGPT",
       "api_key": "no-key-needed-for-local",
-      "api_base": "[http://127.0.0.1:8080/v1/chat/completions](http://127.0.0.1:8080/v1/chat/completions)",
+      "api_base": "http://127.0.0.1:8080/v1/chat/completions",
       "model": "llama3"
     }
   ]
